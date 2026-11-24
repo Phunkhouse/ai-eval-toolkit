@@ -1,0 +1,123 @@
+{
+  "format": "ai-eval-responses/1",
+  "origin": "mock",
+  "description": "Hand-written outputs imitating prompt v2: most v1 failures fixed, but the ambiguous ticket T-004 is now classified instead of abstaining.",
+  "target": {
+    "description": "support ticket triage (hand-written responses)",
+    "promptVersion": "v2"
+  },
+  "responses": {
+    "T-001": {
+      "output": "{\"decision\":\"classify\",\"category\":\"billing\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"I was charged twice for order LC-48213\"}]}",
+      "usage": {
+        "inputTokens": 412,
+        "outputTokens": 61
+      },
+      "latencyMs": 820
+    },
+    "T-002": {
+      "output": "{\"decision\":\"classify\",\"category\":\"shipping\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"The tracking page has said 'label created' for nine days\"}]}",
+      "usage": {
+        "inputTokens": 498,
+        "outputTokens": 64
+      },
+      "latencyMs": 850
+    },
+    "T-003": {
+      "output": "{\"decision\":\"classify\",\"category\":\"product-defect\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"The rear derailleur on my new Larkspur Trail 2 snapped on the second ride.\"}]}",
+      "usage": {
+        "inputTokens": 540,
+        "outputTokens": 70
+      },
+      "latencyMs": 960
+    },
+    "T-004": {
+      "output": "{\"decision\":\"classify\",\"category\":\"product-defect\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"It doesn't work.\"}]}",
+      "usage": {
+        "inputTokens": 470,
+        "outputTokens": 45
+      },
+      "latencyMs": 700
+    },
+    "T-005": {
+      "output": "{\"decision\":\"classify\",\"category\":\"account\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"I want to close my account\"}]}",
+      "usage": {
+        "inputTokens": 530,
+        "outputTokens": 58
+      },
+      "latencyMs": 880
+    },
+    "T-006": {
+      "output": "{\"decision\":\"classify\",\"category\":\"billing\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"My invoice for LC-51230 shows VAT twice\"}]}",
+      "usage": {
+        "inputTokens": 470,
+        "outputTokens": 59
+      },
+      "latencyMs": 880
+    },
+    "T-007": {
+      "output": "{\"decision\":\"classify\",\"category\":\"shipping\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"My parcel LC-51544 was returned to sender without any delivery attempt.\"}]}",
+      "usage": {
+        "inputTokens": 560,
+        "outputTokens": 68
+      },
+      "latencyMs": 940
+    },
+    "T-008": {
+      "output": "{\"decision\":\"classify\",\"category\":\"billing\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"I was billed for a premium service plan I never ordered.\"}]}",
+      "usage": {
+        "inputTokens": 488,
+        "outputTokens": 60
+      },
+      "latencyMs": 820
+    },
+    "T-009": {
+      "output": "{\"decision\":\"classify\",\"category\":\"shipping\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"address\"}]}",
+      "usage": {
+        "inputTokens": 401,
+        "outputTokens": 52
+      },
+      "latencyMs": 760
+    },
+    "T-010": {
+      "output": "{\"decision\":\"classify\",\"category\":\"returns\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"Can I still return the helmet I bought 40 days ago?\"},{\"sourceId\":\"refund-policy\",\"quote\":\"Items returned after 30 days are accepted only as store credit\"}]}",
+      "usage": {
+        "inputTokens": 520,
+        "outputTokens": 88
+      },
+      "latencyMs": 1010
+    },
+    "T-011": {
+      "output": "{\"decision\":\"classify\",\"category\":\"account\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"change the email address on my account\"}]}",
+      "usage": {
+        "inputTokens": 395,
+        "outputTokens": 55
+      },
+      "latencyMs": 700
+    },
+    "T-012": {
+      "output": "{\"decision\":\"classify\",\"category\":\"account\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"Your app keeps logging me out every few minutes.\"}]}",
+      "usage": {
+        "inputTokens": 390,
+        "outputTokens": 54
+      },
+      "latencyMs": 720
+    },
+    "T-013": {
+      "output": "{\"decision\":\"classify\",\"category\":\"returns\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"How do I swap it for a larger size?\"}]}",
+      "usage": {
+        "inputTokens": 399,
+        "outputTokens": 57
+      },
+      "latencyMs": 750
+    },
+    "T-014": {
+      "output": "{\"decision\":\"classify\",\"category\":\"billing\",\"evidence\":[{\"sourceId\":\"ticket\",\"quote\":\"I need a copy of the receipt for my company expenses\"}]}",
+      "usage": {
+        "inputTokens": 492,
+        "outputTokens": 57
+      },
+      "latencyMs": 760
+    }
+  }
+}

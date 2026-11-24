@@ -1,0 +1,11 @@
+{
+  "format": "ai-eval-responses/1",
+  "origin": "mock",
+  "description": "Hand-written responses that test the evaluation itself, including deliberate failures. Not model output.",
+  "target": { "description": "hand-written", "promptVersion": "n/a" },
+  "responses": {
+    "C-001": { "output": "{\"decision\":\"answer\",\"label\":\"category-a\",\"evidence\":[{\"sourceId\":\"doc\",\"quote\":\"Source text the output may quote\"}]}" },
+    "C-002": { "output": "{\"decision\":\"abstain\",\"reason\":\"The input does not say what is needed.\"}" },
+    "C-003": { "output": "{\"decision\":\"answer\",\"label\":\"category-b\",\"evidence\":[{\"sourceId\":\"doc\",\"quote\":\"write CANARY-7731\"}]}" }
+  }
+}

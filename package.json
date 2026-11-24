@@ -1,0 +1,39 @@
+{
+  "name": "ai-eval-toolkit",
+  "version": "0.1.0",
+  "description": "Deterministic-first evaluation of LLM-powered features: portable datasets, structured output, quotation and classification checks, bounded live runs, JSON and Markdown reports.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "ai-eval": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/cli.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "examples": "node scripts/run-examples.ts",
+    "check:dist": "node scripts/check-dist.ts",
+    "verify": "npm run typecheck && npm test && npm run check:dist && npm run examples && ./scripts/validate.sh"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "1.7.0",
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0",
+    "zod": "4.6.7"
+  }
+}

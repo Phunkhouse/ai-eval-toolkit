@@ -1,0 +1,95 @@
+{
+  "format": "ai-eval-responses/1",
+  "origin": "mock",
+  "description": "Hand-written outputs with planted failures: a missing field, a wrong total, Python-style quoting, a document wrongly extracted as an invoice, an invented VAT rate, a currency outside the schema and a total given as text.",
+  "target": {
+    "description": "invoice extraction (hand-written responses)",
+    "promptVersion": "v1"
+  },
+  "responses": {
+    "I-001": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"BW-2026-0412\",\"issue_date\":\"2026-10-02\",\"due_date\":\"2026-11-01\",\"vendor\":\"Brightwater Office Supplies Ltd\",\"currency\":\"EUR\",\"total\":484,\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 610,
+        "outputTokens": 92
+      }
+    },
+    "I-002": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"KPS-881\",\"issue_date\":\"2026-09-15\",\"due_date\":null,\"vendor\":\"Kestrel Print Studio\",\"currency\":\"GBP\",\"total\":114,\"vat_rate\":0.2}}",
+      "usage": {
+        "inputTokens": 590,
+        "outputTokens": 88
+      }
+    },
+    "I-003": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"2026/117\",\"issue_date\":\"2026-10-20\",\"due_date\":\"2026-11-19\",\"vendor\":\"Harbour Lane Catering\",\"currency\":\"EUR\",\"total\":1240.05,\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 612,
+        "outputTokens": 91
+      }
+    },
+    "I-004": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"LC-F-2209\",\"issue_date\":\"2026-11-03\",\"due_date\":\"2026-11-17\",\"vendor\":\"LARKSPUR  CYCLES s.r.o.\",\"currency\":\"CZK\",\"total\":1452,\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 600,
+        "outputTokens": 90
+      }
+    },
+    "I-005": {
+      "output": "{'status': 'extracted', 'invoice': {'invoice_number': 'MW-77', 'issue_date': '2026-08-30', 'due_date': '2026-09-29', 'vendor': 'Meadowbank Web Services', 'currency': 'USD', 'total': 240.0, 'vat_rate': null}}",
+      "usage": {
+        "inputTokens": 580,
+        "outputTokens": 95
+      }
+    },
+    "I-006": {
+      "output": "{\"status\":\"not_an_invoice\",\"reason\":\"The document is a price quote and says no payment is due.\"}",
+      "usage": {
+        "inputTokens": 560,
+        "outputTokens": 40
+      }
+    },
+    "I-007": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"DN-3301\",\"issue_date\":\"2026-10-09\",\"due_date\":null,\"vendor\":\"Kestrel Print Studio\",\"currency\":\"GBP\",\"total\":0,\"vat_rate\":null}}",
+      "usage": {
+        "inputTokens": 570,
+        "outputTokens": 85
+      }
+    },
+    "I-008": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"HLC-2026-031\",\"issue_date\":\"2026-07-01\",\"due_date\":\"2026-07-31\",\"vendor\":\"Harbour Lane Catering\",\"currency\":\"EUR\",\"total\":150,\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 575,
+        "outputTokens": 89
+      }
+    },
+    "I-009": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"MW-91\",\"issue_date\":\"2026-11-01\",\"due_date\":\"2026-12-01\",\"vendor\":\"Meadowbank Web Services\",\"currency\":\"USD\",\"total\":36,\"vat_rate\":null}}",
+      "usage": {
+        "inputTokens": 640,
+        "outputTokens": 90
+      }
+    },
+    "I-010": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"BW-2026-0450\",\"issue_date\":\"2026-11-10\",\"due_date\":\"2026-12-10\",\"vendor\":\"Brightwater Office Supplies Ltd\",\"currency\":\"euro\",\"total\":363,\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 590,
+        "outputTokens": 90
+      }
+    },
+    "I-011": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"2026/122\",\"issue_date\":\"2026-11-12\",\"due_date\":\"2026-12-12\",\"vendor\":\"Harbour Lane Catering\",\"currency\":\"EUR\",\"total\":\"1 240,50\",\"vat_rate\":0.21}}",
+      "usage": {
+        "inputTokens": 600,
+        "outputTokens": 92
+      }
+    },
+    "I-012": {
+      "output": "{\"status\":\"extracted\",\"invoice\":{\"invoice_number\":\"KPS-902\",\"issue_date\":\"2026-11-14\",\"due_date\":\"2026-12-14\",\"vendor\":\"Kestrel Print Studio\",\"currency\":\"GBP\",\"total\":96,\"vat_rate\":0.2}}",
+      "usage": {
+        "inputTokens": 590,
+        "outputTokens": 88
+      }
+    }
+  }
+}

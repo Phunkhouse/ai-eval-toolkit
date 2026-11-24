@@ -1,0 +1,7 @@
+{
+  "name": "review-insights",
+  "private": true,
+  "type": "module",
+  "description": "Invented demo app: summarizes customer product reviews for a fictional outdoor-gear shop.",
+  "scripts": { "test": "node --test" }
+}

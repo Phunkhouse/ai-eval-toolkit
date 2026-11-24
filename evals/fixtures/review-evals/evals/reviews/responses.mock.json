@@ -1,0 +1,67 @@
+{
+  "format": "ai-eval-responses/1",
+  "origin": "mock",
+  "description": "Hand-written responses written when the suite was set up.",
+  "target": {
+    "description": "review summarizer (hand-written)",
+    "promptVersion": "v3"
+  },
+  "responses": {
+    "R-001": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"positive\",\"complaints\":[]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-002": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"negative\",\"complaints\":[{\"quote\":\"The zipper broke on the first day\"},{\"quote\":\"the seams leak\"}]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-003": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"positive\",\"complaints\":[]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-004": {
+      "output": "{\"status\":\"not_a_review\",\"reason\":\"A shipping question, not a review.\"}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-005": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"mixed\",\"complaints\":[{\"quote\":\"they squeak on every step\"},{\"quote\":\"the left heel rubs\"}]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-006": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"mixed\",\"complaints\":[{\"quote\":\"The igniter is faulty and stopped working\"}]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-007": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"positive\",\"complaints\":[]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    },
+    "R-008": {
+      "output": "{\"status\":\"summarized\",\"sentiment\":\"positive\",\"complaints\":[]}",
+      "usage": {
+        "inputTokens": 300,
+        "outputTokens": 40
+      }
+    }
+  }
+}

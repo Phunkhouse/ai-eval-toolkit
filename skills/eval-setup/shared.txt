@@ -1,0 +1,4 @@
+# Files copied from shared/ by scripts/sync-shared.sh
+references/rules.md
+references/profiles.md
+references/library.md

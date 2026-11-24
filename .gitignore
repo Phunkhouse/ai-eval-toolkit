@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+.tmp/
+# Run outputs: reports can contain model outputs and source text.
+evals/results/
+examples/*/results/
