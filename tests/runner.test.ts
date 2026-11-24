@@ -162,7 +162,7 @@ describe('live runs with a fake target', () => {
     const r = await runSuite(s, { mode: 'live', env: offlineEnv, sleep: noSleep });
     expect(calls).toBe(2);
     expect(r.cases.map((c) => c.status)).toEqual(['passed', 'failed', 'skipped']);
-    expect(r.cases[2]!.skipReason).toMatch(/budget: request limit reached/);
+    expect(r.cases[2]!.skipReason).toMatch(/not run: request limit reached/);
     expect(r.run.complete).toBe(false);
     expect(r.usage!.budget.stopReason).toMatch(/request limit/);
     expect(renderMarkdown(r)).toMatch(/Stopped \| request limit reached/);
@@ -179,6 +179,38 @@ describe('live runs with a fake target', () => {
     expect(r.cases[0]).toMatchObject({ status: 'passed', attempts: 2 });
     expect(r.usage).toMatchObject({ attempts: 2, retries: 1, errors: 1 });
     expect(r.usage!.budget.committed.requests).toBe(2);
+  });
+
+  it('stops after consecutive errors instead of using up the limits', async () => {
+    // Regression from the first real live run: missing credentials failed every request, and the
+    // run kept retrying until the cost limit stopped it, reporting reserved cost like spend.
+    let calls = 0;
+    const misconfigured: LiveTarget = async () => {
+      calls++;
+      throw new Error('Could not resolve authentication method');
+    };
+    const pricing = { inputPerMillionTokensUsd: 1, outputPerMillionTokensUsd: 10, source: 't', checkedOn: '2026-11-24' };
+    const s = suiteWith({ live: () => misconfigured, limits: { maxRequests: 30, maxRetriesPerCase: 1, maxCostUsd: 1, pricing, maxOutputTokensPerRequest: 100 } });
+    const r = await runSuite(s, { mode: 'live', env: offlineEnv, sleep: noSleep });
+    expect(calls).toBe(3); // A twice (one retry), B once, then the default limit of 3 stops the run
+    expect(r.cases.map((c) => c.status)).toEqual(['errored', 'errored', 'skipped']);
+    expect(r.cases[1]!.error).toMatch(/no retry: run stopped/);
+    expect(r.cases[2]!.skipReason).toMatch(/not run: 3 consecutive errors .*authentication/);
+    expect(r.usage!.budget.unknownUsageRequests).toBe(3);
+    expect(r.usage!.budget.cost.providerReportedUsd + r.usage!.budget.cost.estimatedUsd).toBe(0);
+    expect(r.nextActions[0]).toMatch(/No case produced an output/);
+  });
+
+  it('resets the error streak after a success', async () => {
+    let calls = 0;
+    const alternating: LiveTarget = async () => {
+      calls++;
+      if (calls % 2 === 1) throw new Error('503 overloaded');
+      return out('x');
+    };
+    const r = await runSuite(suiteWith({ live: () => alternating, limits: { maxRequests: 30, maxRetriesPerCase: 1, maxConsecutiveErrors: 2 } }), { mode: 'live', env: offlineEnv, sleep: noSleep });
+    expect(r.usage!.budget.stopReason).toBeUndefined();
+    expect(r.summary.skipped).toBe(0);
   });
 
   it('redacts secrets from error messages', async () => {

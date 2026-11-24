@@ -120,7 +120,7 @@ export function renderMarkdown(r) {
             out.push(table(['', ''], [
                 ['Requests', `${b.committed.requests} committed (limit ${u.limits.maxRequests}); ${u.attempts} attempt(s), ${u.retries} retr${u.retries === 1 ? 'y' : 'ies'}, ${u.timeouts} timeout(s), ${u.errors} error(s)`],
                 ['Tokens', `${b.committed.inputTokens} input, ${b.committed.outputTokens} output`],
-                ['Cost', `$${b.committed.costUsd.toFixed(4)}${u.limits.maxCostUsd ? ` (limit $${u.limits.maxCostUsd})` : ''}: provider-reported $${b.cost.providerReportedUsd.toFixed(4)}, estimated $${b.cost.estimatedUsd.toFixed(4)}, worst case counted for unknown usage $${b.cost.reservedUnknownUsd.toFixed(4)}`],
+                ['Cost', `$${b.committed.costUsd.toFixed(4)}${u.limits.maxCostUsd ? ` (limit $${u.limits.maxCostUsd})` : ''}: provider-reported $${b.cost.providerReportedUsd.toFixed(4)}, estimated $${b.cost.estimatedUsd.toFixed(4)}, worst case counted for ${b.unknownUsageRequests} request(s) with unknown usage $${b.cost.reservedUnknownUsd.toFixed(4)} (counted against the limit; may not have been billed)`],
                 ['Pricing', u.limits.pricing ? `${u.limits.pricing.inputPerMillionTokensUsd}/${u.limits.pricing.outputPerMillionTokensUsd} USD per million input/output tokens, from ${u.limits.pricing.source}, checked ${u.limits.pricing.checkedOn}` : 'none given'],
                 ['Latency', fmtLatency(u.latencyMs)],
                 ['Stopped', b.stopReason ?? 'no'],

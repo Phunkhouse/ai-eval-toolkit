@@ -10,6 +10,8 @@ export function validateLimits(limits) {
         problems.push('concurrency must be a positive integer');
     if (limits.timeoutMs !== undefined && !positiveInt(limits.timeoutMs))
         problems.push('timeoutMs must be a positive integer');
+    if (limits.maxConsecutiveErrors !== undefined && !positiveInt(limits.maxConsecutiveErrors))
+        problems.push('maxConsecutiveErrors must be a positive integer');
     if (limits.maxCostUsd !== undefined) {
         if (!(typeof limits.maxCostUsd === 'number' && limits.maxCostUsd > 0))
             problems.push('maxCostUsd must be a positive number');
@@ -57,6 +59,8 @@ export class BudgetGuard {
     cost = { providerReportedUsd: 0, estimatedUsd: 0, reservedUnknownUsd: 0 };
     overruns = [];
     stop;
+    unknownUsage = 0;
+    consecutiveErrors = 0;
     constructor(limits) {
         const problems = validateLimits(limits);
         if (problems.length)
@@ -65,6 +69,17 @@ export class BudgetGuard {
     }
     get stopReason() {
         return this.stop;
+    }
+    /** A request returned a response: the error streak ends. */
+    recordSuccess() {
+        this.consecutiveErrors = 0;
+    }
+    /** A request threw or timed out. Stops the run when errors keep coming with no success between them. */
+    recordError(message) {
+        this.consecutiveErrors++;
+        const max = this.limits.maxConsecutiveErrors ?? 3;
+        if (this.consecutiveErrors >= max)
+            this.stop ??= `${this.consecutiveErrors} consecutive errors with no successful response (last: ${message}); check the target's configuration before rerunning`;
     }
     /** Worst-case amounts for one request with this many estimated input tokens. */
     worstCase(estimatedInputTokens) {
@@ -102,6 +117,7 @@ export class BudgetGuard {
         if (!known) {
             this.add(r);
             this.cost.reservedUnknownUsd += r.costUsd;
+            this.unknownUsage++;
             return { costUsd: r.costUsd, costSource: 'unknown' };
         }
         const inputTokens = usage.inputTokens ?? r.inputTokens;
@@ -148,7 +164,7 @@ export class BudgetGuard {
         return { costUsd, costSource };
     }
     snapshot() {
-        const s = { committed: { ...this.committed }, inFlight: this.sumInFlight(), cost: { ...this.cost }, overruns: [...this.overruns] };
+        const s = { committed: { ...this.committed }, inFlight: this.sumInFlight(), cost: { ...this.cost }, unknownUsageRequests: this.unknownUsage, overruns: [...this.overruns] };
         if (this.stop)
             s.stopReason = this.stop;
         return s;

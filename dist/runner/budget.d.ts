@@ -18,6 +18,12 @@ export interface LiveLimits {
     timeoutMs?: number;
     /** Pause before a retry, in milliseconds. Default 1000. */
     retryDelayMs?: number;
+    /**
+     * Stop the run after this many errors or timeouts in a row with no successful response in
+     * between, retries included. Default 3. Catches configuration problems (missing credentials,
+     * a wrong endpoint) before they use up the request and cost limits.
+     */
+    maxConsecutiveErrors?: number;
     /** Total spend limit in USD. Requires `pricing` and `maxOutputTokensPerRequest`. */
     maxCostUsd?: number;
     /** Total input and output token limits across the run. */
@@ -50,6 +56,8 @@ export interface BudgetSnapshot {
         estimatedUsd: number;
         reservedUnknownUsd: number;
     };
+    /** Requests whose usage is unknown (errors, timeouts, targets that report nothing); their worst case is counted. */
+    unknownUsageRequests: number;
     overruns: string[];
     stopReason?: string;
 }
@@ -78,8 +86,14 @@ export declare class BudgetGuard {
     private cost;
     private overruns;
     private stop;
+    private unknownUsage;
+    private consecutiveErrors;
     constructor(limits: LiveLimits);
     get stopReason(): string | undefined;
+    /** A request returned a response: the error streak ends. */
+    recordSuccess(): void;
+    /** A request threw or timed out. Stops the run when errors keep coming with no success between them. */
+    recordError(message: string): void;
     /** Worst-case amounts for one request with this many estimated input tokens. */
     worstCase(estimatedInputTokens: number): Amounts;
     /** Reserve a request's worst case, or stop the run and return the reason. */

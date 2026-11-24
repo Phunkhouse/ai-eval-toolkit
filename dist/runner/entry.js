@@ -157,8 +157,12 @@ export async function runCli(suite, argv = process.argv.slice(2), io = {}) {
                 log(`  baseline: ${report.comparison.compatibility}; ${report.comparison.cases.regressed.length} regressed, ${report.comparison.cases.improved.length} improved`);
             if (report.run.evidence === 'mock')
                 log('  mock responses: this checks the evaluation, not the model');
-            if (report.usage)
-                log(`  usage: ${report.usage.budget.committed.requests} request(s), $${report.usage.budget.committed.costUsd.toFixed(4)}${report.usage.budget.stopReason ? `; stopped: ${report.usage.budget.stopReason}` : ''}`);
+            if (report.usage) {
+                const b = report.usage.budget;
+                const known = b.cost.providerReportedUsd + b.cost.estimatedUsd;
+                const reserved = b.unknownUsageRequests ? `, plus $${b.cost.reservedUnknownUsd.toFixed(4)} counted at worst case for ${b.unknownUsageRequests} request(s) with unknown usage (may not have been billed)` : '';
+                log(`  usage: ${b.committed.requests} request(s); cost $${known.toFixed(4)} from reported usage${reserved}${b.stopReason ? `; stopped: ${b.stopReason}` : ''}`);
+            }
             const rel = relative(process.cwd(), paths.markdown);
             log(`  report: ${rel && !rel.startsWith('..') ? rel : paths.markdown}`);
         }

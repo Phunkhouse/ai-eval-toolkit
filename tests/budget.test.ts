@@ -75,6 +75,18 @@ describe('BudgetGuard', () => {
     expect(denied(reserve(g))).toBeDefined();
   });
 
+  it('stops after the configured number of consecutive errors, and a success resets the count', () => {
+    const g = new BudgetGuard({ maxRequests: 10, maxConsecutiveErrors: 2 });
+    g.recordError('boom');
+    g.recordSuccess();
+    g.recordError('boom');
+    expect(g.stopReason).toBeUndefined();
+    g.recordError('still boom');
+    expect(g.stopReason).toMatch(/2 consecutive errors .*still boom/);
+    expect(denied(reserve(g))).toMatch(/consecutive errors/);
+    expect(validateLimits({ maxRequests: 1, maxConsecutiveErrors: 0 }).join()).toMatch(/maxConsecutiveErrors/);
+  });
+
   it('enforces token limits', () => {
     const g = new BudgetGuard({ maxRequests: 10, maxInputTokens: 1500 });
     expect(denied(reserve(g, 1000))).toBeUndefined();

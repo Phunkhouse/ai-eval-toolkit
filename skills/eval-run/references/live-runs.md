@@ -32,7 +32,8 @@ node evals/<name>/<name>.eval.ts --live --record evals/<name>/responses.recorded
 ## What the guard does and does not guarantee
 
 - It reserves each request's worst case (one request, estimated input tokens, the per-request output cap, their cost) before the request starts, including retries and requests running in parallel, and refuses to start a request that could exceed a limit.
-- After a response, it replaces the reservation with the reported usage. Requests with unknown usage (errors, timeouts) keep their worst case, because the provider may still charge for them.
+- After a response, it replaces the reservation with the reported usage. Requests with unknown usage (errors, timeouts) keep their worst case, because the provider may still charge for them. The report and summary line show that reserved amount separately from cost based on reported usage; do not present it as spend.
+- It stops the run after `maxConsecutiveErrors` (default 3) errors or timeouts in a row with no successful response, retries included. A run that stops this way with no evaluated case almost always has a configuration problem (missing credentials, a wrong endpoint, a broken adapter): report the error, fix the configuration, and do not rerun with larger limits.
 - Costs are **estimates** from token counts and the given prices unless the target reports a provider-billed cost. They are not billing records; check the provider console for charges.
 - Input tokens are estimated before sending; a response that exceeds its reservation (an adapter that ignores the output cap, a target making extra calls) is recorded as an overrun and stops the run, but that spend has already happened.
 - A target that makes several provider calls per case must report their combined usage and `providerRequests`; otherwise the guard undercounts.

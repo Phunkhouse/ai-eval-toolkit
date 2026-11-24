@@ -190,8 +190,12 @@ export function limitationsFor(i: LimitationInput): string[] {
 
 export function nextActionsFor(r: Pick<Report, 'criticalFailures' | 'thresholds' | 'summary' | 'run' | 'comparison' | 'metrics' | 'cases'>, unreviewedSynthetic: number): string[] {
   const out: string[] = [];
-  if (r.criticalFailures.length) out.push(`Investigate the ${r.criticalFailures.length} critical failure(s) first; aggregates do not offset them.`);
-  if (r.summary.errored) out.push(`Fix the ${r.summary.errored} errored case(s) (target or evaluator errors) before reading metrics; errored cases are excluded from evaluator metrics.`);
+  const nothingEvaluated = r.summary.errored > 0 && r.summary.passed + r.summary.failed === 0;
+  // When nothing produced output, the configuration problem comes before any per-case finding.
+  if (nothingEvaluated)
+    out.push('No case produced an output that could be evaluated. The errors point to the target or its configuration (credentials, endpoint, adapter), not to model behavior; fix that before reading anything into this run.');
+  if (r.criticalFailures.length) out.push(`Investigate the ${r.criticalFailures.length} critical failure(s)${nothingEvaluated ? ' once outputs exist' : ' first'}; aggregates do not offset them.`);
+  if (r.summary.errored && !nothingEvaluated) out.push(`Fix the ${r.summary.errored} errored case(s) (target or evaluator errors) before reading metrics; errored cases are excluded from evaluator metrics.`);
   const noResponse = r.cases.filter((c) => c.skipReason === 'no response recorded for this case').length;
   if (noResponse) out.push(`Add responses for the ${noResponse} case(s) that have none, or record them with a bounded live run.`);
   const noChecks = r.cases.filter((c) => c.skipReason === 'no applicable checks').length;

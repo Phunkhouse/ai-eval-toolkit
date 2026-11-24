@@ -135,7 +135,7 @@ async function runLiveCases(cases, dataset, target, guard, options, stats) {
             while (!done) {
                 const r = guard.reserve(est);
                 if ('denied' in r) {
-                    done = attempt === 0 ? { skipReason: `budget: ${r.denied}` } : { error: `${lastError}; no retry: ${r.denied}`, attempts: attempt };
+                    done = attempt === 0 ? { skipReason: `not run: ${r.denied}` } : { error: `${lastError}; no retry: ${r.denied}`, attempts: attempt };
                     break;
                 }
                 attempt++;
@@ -154,6 +154,7 @@ async function runLiveCases(cases, dataset, target, guard, options, stats) {
                     const response = await Promise.race([target(c.input, ctx), timeout]);
                     const latencyMs = options.clock() - start;
                     const settled = guard.settle(r, response.usage);
+                    guard.recordSuccess();
                     response.usage = { ...response.usage, costUsd: settled.costUsd, costSource: settled.costSource };
                     done = { response, attempts: attempt, latencyMs };
                 }
@@ -166,8 +167,11 @@ async function runLiveCases(cases, dataset, target, guard, options, stats) {
                         stats.timeouts++;
                     else
                         stats.errors++;
+                    guard.recordError(lastError);
                     if (attempt > maxRetries)
                         done = { error: lastError, attempts: attempt };
+                    else if (guard.stopReason)
+                        done = { error: `${lastError}; no retry: run stopped`, attempts: attempt };
                     else
                         await options.sleep((limits.retryDelayMs ?? 1000) * attempt);
                 }

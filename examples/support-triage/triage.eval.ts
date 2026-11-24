@@ -59,7 +59,8 @@ export const suite = defineSuite({
     concurrency: 2,
     timeoutMs: 60_000,
     maxOutputTokensPerRequest: 2048,
-    maxCostUsd: 0.5,
+    // Every case's first attempt fits at its worst case (13 × ~$0.044 at Opus 5.5 prices); retries may not.
+    maxCostUsd: 0.6,
     ...(pricingFor(liveModel()) ? { pricing: pricingFor(liveModel())! } : {}),
     estimateInputTokens: (_input, sourcesText) => 700 + Math.ceil(sourcesText.length / 3),
   },

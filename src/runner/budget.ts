@@ -20,6 +20,12 @@ export interface LiveLimits {
   timeoutMs?: number;
   /** Pause before a retry, in milliseconds. Default 1000. */
   retryDelayMs?: number;
+  /**
+   * Stop the run after this many errors or timeouts in a row with no successful response in
+   * between, retries included. Default 3. Catches configuration problems (missing credentials,
+   * a wrong endpoint) before they use up the request and cost limits.
+   */
+  maxConsecutiveErrors?: number;
   /** Total spend limit in USD. Requires `pricing` and `maxOutputTokensPerRequest`. */
   maxCostUsd?: number;
   /** Total input and output token limits across the run. */
@@ -51,6 +57,8 @@ export interface BudgetSnapshot {
   inFlight: Amounts;
   /** Cost by where it came from. `reservedUnknown` is worst-case cost counted for requests whose usage is unknown. */
   cost: { providerReportedUsd: number; estimatedUsd: number; reservedUnknownUsd: number };
+  /** Requests whose usage is unknown (errors, timeouts, targets that report nothing); their worst case is counted. */
+  unknownUsageRequests: number;
   overruns: string[];
   stopReason?: string;
 }
@@ -64,6 +72,7 @@ export function validateLimits(limits: LiveLimits): string[] {
   if (limits.maxRetriesPerCase !== undefined && !(Number.isInteger(limits.maxRetriesPerCase) && limits.maxRetriesPerCase >= 0)) problems.push('maxRetriesPerCase must be a non-negative integer');
   if (limits.concurrency !== undefined && !positiveInt(limits.concurrency)) problems.push('concurrency must be a positive integer');
   if (limits.timeoutMs !== undefined && !positiveInt(limits.timeoutMs)) problems.push('timeoutMs must be a positive integer');
+  if (limits.maxConsecutiveErrors !== undefined && !positiveInt(limits.maxConsecutiveErrors)) problems.push('maxConsecutiveErrors must be a positive integer');
   if (limits.maxCostUsd !== undefined) {
     if (!(typeof limits.maxCostUsd === 'number' && limits.maxCostUsd > 0)) problems.push('maxCostUsd must be a positive number');
     if (!limits.pricing) problems.push('maxCostUsd needs pricing (input and output price per million tokens, with source and date)');
@@ -106,6 +115,8 @@ export class BudgetGuard {
   private cost = { providerReportedUsd: 0, estimatedUsd: 0, reservedUnknownUsd: 0 };
   private overruns: string[] = [];
   private stop: string | undefined;
+  private unknownUsage = 0;
+  private consecutiveErrors = 0;
 
   constructor(limits: LiveLimits) {
     const problems = validateLimits(limits);
@@ -115,6 +126,18 @@ export class BudgetGuard {
 
   get stopReason(): string | undefined {
     return this.stop;
+  }
+
+  /** A request returned a response: the error streak ends. */
+  recordSuccess(): void {
+    this.consecutiveErrors = 0;
+  }
+
+  /** A request threw or timed out. Stops the run when errors keep coming with no success between them. */
+  recordError(message: string): void {
+    this.consecutiveErrors++;
+    const max = this.limits.maxConsecutiveErrors ?? 3;
+    if (this.consecutiveErrors >= max) this.stop ??= `${this.consecutiveErrors} consecutive errors with no successful response (last: ${message}); check the target's configuration before rerunning`;
   }
 
   /** Worst-case amounts for one request with this many estimated input tokens. */
@@ -151,6 +174,7 @@ export class BudgetGuard {
     if (!known) {
       this.add(r);
       this.cost.reservedUnknownUsd += r.costUsd;
+      this.unknownUsage++;
       return { costUsd: r.costUsd, costSource: 'unknown' };
     }
     const inputTokens = usage.inputTokens ?? r.inputTokens;
@@ -192,7 +216,7 @@ export class BudgetGuard {
   }
 
   snapshot(): BudgetSnapshot {
-    const s: BudgetSnapshot = { committed: { ...this.committed }, inFlight: this.sumInFlight(), cost: { ...this.cost }, overruns: [...this.overruns] };
+    const s: BudgetSnapshot = { committed: { ...this.committed }, inFlight: this.sumInFlight(), cost: { ...this.cost }, unknownUsageRequests: this.unknownUsage, overruns: [...this.overruns] };
     if (this.stop) s.stopReason = this.stop;
     return s;
   }
