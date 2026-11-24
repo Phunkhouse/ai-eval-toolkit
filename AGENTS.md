@@ -47,6 +47,7 @@ When adding or changing a script, update this section.
 
 ## Pull requests
 
+- **Every change reaches `main` through a pull request.** Work on a branch cut from `origin/main` (`type/short-description`), push the branch and open a PR; never push commits to `main` directly. Release tags are the exception: they are pushed after the release PR is merged and CI has passed on `main`.
 - Work through multiple PRs sequentially, at most one agent-authored PR awaiting review at a time, unless the user asks for parallel work.
 - When a change requires action in projects that use the toolkit (a new format version, a renamed metric), put a `> [!IMPORTANT]` block at the top of the PR description saying what to do and how to verify it, and repeat it in chat.
 - Leave the merge to the user unless they explicitly ask you to perform it.
