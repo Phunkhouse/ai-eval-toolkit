@@ -1,6 +1,6 @@
 {
   "name": "ai-eval-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deterministic-first evaluation of LLM-powered features: portable datasets, structured output, quotation and classification checks, bounded live runs, JSON and Markdown reports.",
   "type": "module",
   "private": true,

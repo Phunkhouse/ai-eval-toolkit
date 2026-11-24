@@ -40,7 +40,7 @@ The installer links each Skill into `~/.claude/skills` (Claude Code) and `~/.age
 In a project you evaluate, add the library as a dev dependency (it ships prebuilt; no install scripts run):
 
 ```bash
-npm install --save-dev git+ssh://git@github-personal/Phunkhouse/ai-eval-toolkit.git#v0.1.0
+npm install --save-dev git+ssh://git@github-personal/Phunkhouse/ai-eval-toolkit.git#v0.1.1
 npm install --save-dev file:../ai-eval-toolkit
 ```
 

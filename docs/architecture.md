@@ -79,7 +79,7 @@ ai-eval-toolkit/
 ### Distribution
 
 - **Skills** install like the sibling toolkits (`scripts/install.sh`, global links or `--project` copies).
-- **The library** is installed into the target project as a dev dependency from the Git repository or a local clone: `npm install --save-dev git+ssh://git@github-personal/Phunkhouse/ai-eval-toolkit.git#v0.1.0`, or `file:../ai-eval-toolkit`. `dist/` is committed and checked against the source by `npm run check:dist` (decision 0002), so installation needs no build step, no lifecycle scripts and no registry publication. Package managers that block dependency build scripts (pnpm 10) work unchanged.
+- **The library** is installed into the target project as a dev dependency from the Git repository or a local clone: `npm install --save-dev git+ssh://git@github-personal/Phunkhouse/ai-eval-toolkit.git#v0.1.1`, or `file:../ai-eval-toolkit`. `dist/` is committed and checked against the source by `npm run check:dist` (decision 0002), so installation needs no build step, no lifecycle scripts and no registry publication. Package managers that block dependency build scripts (pnpm 10) work unchanged.
 - **The suite lives in the target project** (`evals/<suite>.eval.ts`), with its dataset, recorded responses and reports. Node ≥ 22.18 runs TypeScript suite files directly (`node evals/triage.eval.ts`); no `tsx` or build is needed.
 
 ### Data flow of a run

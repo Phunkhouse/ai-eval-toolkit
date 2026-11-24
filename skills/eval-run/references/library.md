@@ -9,7 +9,7 @@ The library is a zero-dependency TypeScript package. A suite is one TypeScript f
 - Install as a dev dependency. Ask the owner before adding it; it changes the project's manifest. From the toolkit's Git repository (pin a tag), or from a local clone:
 
   ```bash
-  npm install --save-dev git+ssh://git@github.com/Phunkhouse/ai-eval-toolkit.git#v0.1.0
+  npm install --save-dev git+ssh://git@github.com/Phunkhouse/ai-eval-toolkit.git#v0.1.1
   npm install --save-dev file:../ai-eval-toolkit
   ```
 

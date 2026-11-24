@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-11-24
 
 Found by the first real live run, which had no API credentials: every request failed, and the run retried until the cost limit stopped it.
 
