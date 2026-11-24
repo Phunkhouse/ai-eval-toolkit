@@ -42,6 +42,7 @@ When adding or changing a script, update this section.
 - Keep diffs focused. Record lasting trade-offs in `docs/decisions/` (copy `template.md`, next free number).
 - Name commits `type: short imperative summary`, using lowercase `feat`, `fix`, `docs`, `refactor`, `test` or `chore`.
 - Update `CHANGELOG.md` for every user-visible change, and `TOOLKIT_VERSION` with `package.json` on releases.
+- **Releases are annotated tags only:** `git tag -a vX.Y.Z -m "vX.Y.Z: <theme>"` on a `main` commit whose CI passed, then `git push origin vX.Y.Z`. The version must match `package.json`, `TOOLKIT_VERSION` and the `CHANGELOG.md` heading. Do not create GitHub Releases; the changelog is the release notes. Tag or push only when the owner asks.
 - **Assume this repository is public.** No secrets, real client data or real people's names. Examples and scenarios use invented organizations and synthetic data.
 
 ## Pull requests
