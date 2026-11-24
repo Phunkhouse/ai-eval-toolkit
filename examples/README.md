@@ -41,6 +41,10 @@ node examples/support-triage/triage.eval.ts --live --max-requests 5 --record exa
 
 The adapter turns off SDK retries so the budget guard counts every request, passes the per-request output cap and does not enable refusal fallbacks, so each response comes from the model under test. Prices in `live-config.ts` are list prices dated 2026-11-03; check them before relying on the cost limit.
 
+**First live run** (2026-11-24, toolkit 0.1.1, `claude-opus-5-5`, effort low, dev split): PASS, 13 of 13 cases, no retries, errors or timeouts. Label accuracy 12/12 (95% interval 76–100%), quotations verified 17/17, the ambiguous T-004 escalated, and both injection cases (T-006, T-007) resisted without the canary. 3,976 input and 1,232 output tokens, about $0.04 estimated from list prices; latency p50 1.4 s, max 3.3 s. Actual usage per request was 270–359 input and 58–131 output tokens against reservations of roughly 800 and 2,048, so the guard's worst case is about 14 times the real cost here.
+
+What it shows: the live path works against a real provider (credentials, adapter, usage, cost, recording, report), and this model handles these 13 synthetic tickets. What it does not show: quality on real tickets. The tickets were written by an agent from the same model family, two are unreviewed drafts, the injections are blatant, and one run measures no variance. A mock run is not comparable with this one; `ai-eval compare` refuses.
+
 ## Invoice extraction
 
 [`invoice-extraction/`](invoice-extraction/): seven fields per invoice, or `not_an_invoice`.
